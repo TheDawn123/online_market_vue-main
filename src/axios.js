@@ -12,11 +12,11 @@
 //axios.defaults.baseURL = 'http://121.5.210.93:8081';
 // axios.defaults.baseURL = 'http://localhost:8081';
 import axios from 'axios'
-
+axios.defaults.withCredentials =true
 // axios.defaults.baseURL="http://121.5.210.93:8081"
 
 // if (process.env.NODE_ENV === "development")
-//     axios.defaults.baseURL="http://localhost:8081"
+    axios.defaults.baseURL="http://localhost:8081"
 // else
 
 
@@ -25,8 +25,8 @@ import axios from 'axios'
 
 
 
-axios.defaults.baseURL="http://121.5.210.93:8081"
-
+// axios.defaults.baseURL="http://121.5.210.93:8081"
+//
 axios.interceptors.request.use(
     config=>{
         const token = window.localStorage.getItem("token")

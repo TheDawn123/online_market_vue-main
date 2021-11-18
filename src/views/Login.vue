@@ -9,13 +9,13 @@
 <!--          <el-tab-pane label="&#45;&#45;&#45;&#45;&#45;&#45;" name="fourth"></el-tab-pane>-->
         </el-tabs>
       </div>
-<!--      <div class="div2">-->
-<!--        <el-input-->
+      <div class="div2">
+        <el-input
 
-<!--          v-model="input4">-->
-<!--          <i slot="suffix" class="el-input__icon el-icon-search"></i>-->
-<!--        </el-input>-->
-<!--      </div>-->
+          v-model="input4">
+          <i slot="suffix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+      </div>
       <div class="div3">
         <router-link :to="{name: 'Login'}">
           <el-avatar :size="40" :src="circleUrl">
@@ -24,13 +24,13 @@
       </div>
     </el-header>
     <div class="link">
-<!--      <router-link :to="{name: 'Login'}">-->
-<!--        登录-->
-<!--      </router-link>-->
-<!--      <el-divider direction="vertical"></el-divider>-->
-<!--      <router-link :to="{name: 'Register'}">-->
-<!--        注册-->
-<!--      </router-link>-->
+      <router-link :to="{name: 'Login'}">
+        登录
+      </router-link>
+      <el-divider direction="vertical"></el-divider>
+      <router-link :to="{name: 'Register'}">
+        注册
+      </router-link>
     </div>
     <el-container>
       <el-main >
@@ -65,7 +65,7 @@ export default {
     //     callback();
     // };
     return {
-     // BASE64: '',
+      BASE64: '',
       activeName: '',
       input4: '',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
@@ -81,24 +81,48 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
-      if (this.activeName === 'first') this.$router.push("Gooddetail")
+      if (this.activeName === 'first') this.$router.push("Home")
       console.log(tab, event);
     },
     onSubmit() {
       this.$axios({
         method: 'post',
-        url: '/users/checkuser',
+        url: '/v2.0/users/check',
         data: this.form
-      }).then((res) => {
+      }).then((res) => {//登录失败
+        console.log(res)
         if (res.data.code !== 200) {
           alert(res.data.msg)
-        } else {
-          // console.log(res.data)
-          this.$store.commit("SET_TOKEN", res.data.msg)
+        } else {//登录成功
+
+          this.$store.commit("SET_TOKEN", res.data.msg)//改变SET_TOKEN中的值，用res.data.msg传回store.js中代替原本store中的token值
           this.$store.commit("SET_USERINF", res.data.data)
-          this.$router.push("Userhome")
+          this.$axios({
+            method:"get",
+            url:"/v2.0/role/" + this.$store.getters.getUser.uid
+          }).then(res=> {
+            if (res.data.data.role === 0 ){//返回的role值是1说明应该进入卖家页面
+              this.$message({
+                type:"success",
+                message:"尊敬的管理员,登陆成功"
+              })
+              console.log(res.data.data)
+              this.$router.push("Userhome")
+            }else if (res.data.data.role === 1){//普通用户
+              this.$message({
+                type:"success",
+                message:"登陆成功"
+              })
+              console.log(res.data.data)
+              this.$router.push("Changecust")
+            }
+          })
+
         }
       })
+    },
+    created(){
+      this.reload()
     }
   }
 };
@@ -111,11 +135,11 @@ export default {
   width: 450px;
 }
 
-/*.div2 {*/
-/*  margin-left: 30px;*/
-/*  width: 300px;*/
-/*  float: left;*/
-/*}*/
+.div2 {
+  margin-left: 30px;
+  width: 300px;
+  float: left;
+}
 
 .div3 {
   margin-left: 30px;

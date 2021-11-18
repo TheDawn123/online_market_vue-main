@@ -55,8 +55,14 @@
               <template slot="label">
                 操作
               </template>
+              <div v-if="live === false">
               <el-button type="primary" size="mini" @click="accept(order)">确认交易</el-button>
               <el-button type="danger" size="mini" @click="reject(order)">取消交易</el-button>
+              </div>
+              <div v-else>
+                <el-button type="primary" size="mini" @click="accept(order)" disabled>确认交易</el-button>
+                <el-button type="danger" size="mini" @click="reject(order)" >取消交易</el-button>
+              </div>
             </el-descriptions-item>
             <el-descriptions-item v-if="order.status===1">
               <template slot="label">
@@ -102,12 +108,12 @@ export default {
       orderslist: [],
       currentPage: 1,
       size: 5,
-      total: 0
+      total: 0,
+      live:false
     }
   },
   created() {
     this.handleCurrentChange(1)
-
   },
   methods: {
     handleCurrentChange(val) {
@@ -121,10 +127,15 @@ export default {
         }
         console.log(this.orderslist)
       })
-    }, accept(order) {
+      this.$axios.get("/good/alive").then(res=>{
+        this.live = res.data.data
+      })
+    },
+    accept(order) {
       let data = new FormData;
       data.append("gid",order.gid)
       data.append("oid",order.oid)
+
 
       this.$axios({
         data:data,
@@ -137,17 +148,20 @@ export default {
           url: "good/frozen/"+ order.gid
         })
         if (res.data.code !== 200)
+          console.log(res)
           this.$message.warning(res.data.msg);
         this.reload()//刷新
       })
-    }, reject(order) {
+    },
+    reject(order) {
       this.$axios({
         method:"post",
         url: "/orders/reject/"+order.oid
       }).then(() => {
         this.reload()
       })
-    }, success(order) {
+    },
+    success(order) {
       console.log(order)
       let data = new FormData;
       data.append("gid",order.gid)
@@ -159,16 +173,16 @@ export default {
         method:"post",
         url: "/orders/success"
       }).then((res) => {
-        console.log(res.data)
+        //console.log(res.data)
         if (res.data.code === 406 && res.data.data === 1){
           this.$message.warning(`当前商品已售空`);
         }else {
-          console.log("sss")
           this.$message.success("交易成功");
           this.reload()
         }
       })
-    }, fail(order) {
+    },
+    fail(order) {
       this.$axios({
         method:"post",
         url: "/orders/reject/"+order.oid

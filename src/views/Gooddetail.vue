@@ -37,7 +37,7 @@ export default {
   comments: {Userdetail},
   data() {
     return {
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      url: 'https://i.loli.net/2021/11/02/xhGdp2qk31SEyMt.jpg',
       good : {}
 
     }

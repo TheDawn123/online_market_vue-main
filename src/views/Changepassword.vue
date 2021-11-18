@@ -34,7 +34,7 @@ import Userdetail from "@/components/Userdetail";
 import Side from "@/components/Side";
 
 export default {
-  inject: ["reload"],
+  inject: ["reload"],//?
   name: "Changepassword",
   components: {Side, Userdetail},
   data() {
