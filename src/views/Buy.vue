@@ -50,19 +50,19 @@
           <el-divider></el-divider>
         </div>
         <div class="label2" style="margin-top: 10px">
-          <div style="display: inline;text-align: center;">商品阿斯顿</div>
-          <div style="display: inline;text-align: center;margin-left: 130px">199$</div>
-          <div style="display: inline;text-align: center;margin-left: 160px">15</div>
+          <div style="display: inline;text-align: center;">{{ this.good['gname'] }}</div>
+          <div style="display: inline;text-align: center;margin-left: 220px">{{ this.good['price'] }}</div>
+          <div style="display: inline;text-align: center;margin-left: 160px">{{ this.good['stock'] }}</div>
           <div style="display: inline;text-align: center;margin-left: 160px">
-            <el-input-number :min="1" :max="10" label="描述文字" size="small"></el-input-number>
+            <el-input-number v-model="num" :min="1"  :max="this.good['stock']"  label="描述文字" size="small">12</el-input-number>
           </div>
-          <div style="display: inline;text-align: center;margin-left: 110px">商品</div>
+          <div style="display: inline;text-align: center;margin-left: 110px">{{ this.num * this.good['price'] }}</div>
         </div>
         <div style="float: right;margin-top: 150px">
           <div style="margin-right: 0px">实付款:</div>
-          <h2>100￥</h2>
+          <h2>{{ this.num * this.good['price'] }} ￥</h2>
           <br>
-          <el-button type="primary" style="width: 200px;background-color: red">提交订单</el-button>
+          <el-button type="primary" style="width: 200px;background-color: red" @click="submitForm">提交订单</el-button>
         </div>
       </el-main>
 
@@ -77,51 +77,71 @@ export default {
   components: {Userdetail},
   data() {
     return {
-
+      num:1,
       good: {},
-
+      // total:this.num * this.good['price']
     }
   }, methods: {
-    submitForm(forName) {
-      this.$refs[forName].validate(valid => {
-        if (valid) {
-          let data = new FormData
-          data.append('username', this.ruleForm.name)
-          data.append('userphone', this.ruleForm.phone)
-          data.append('useraddress', this.ruleForm.address)
-          data.append('oid', 0)
-          data.append('gid', this.good.gid)
-          data.append('number', 1)
-          data.append('amount', this.good.price)
-          data.append('status', 0)
-          this.$axios({
-            method: "post",
-            data: data,
-            url: "/orders/insert"
-          }).then(res => {
-            if (res.data.code === 200) {
-              this.$message({
-                type: "success",
-                message: "下单成功"
-              })
-              this.$router.push({//下单成功页面进行跳转
-                name: "Gooddetail"
-              })
-            } else {
-              this.$message({
-                type: "info",
-                message: res.data.msg
-              })
-            }
-            // console.log(res.data)
-          })
-        } else {
-          this.$message({
-            type: "info",
-            message: "格式错误"
-          })
-        }
-      })
+    submitForm() {
+      // let data = new FormData
+      // var total = this.num * this.good['price']
+      // data.append('amount',total)
+      // data.append('date',Date())
+      // data.append('gid',this.good['gid'])
+      // data.append('number',this.num)
+      // data.append('status',1)
+      // data.append('uid',this.good['uid'])
+      // this.$axios({
+      //   method:'put',
+      //   url:'/v2.0/orders',
+      //   data:data
+      // }).then(res=>{
+      //   console.log(res)
+      // })
+
+
+      // console.log(this.num)
+
+
+      // this.$refs[forName].validate(valid => {
+      //   if (valid) {
+      //     let data = new FormData
+      //     data.append('username', this.ruleForm.name)
+      //     data.append('userphone', this.ruleForm.phone)
+      //     data.append('useraddress', this.ruleForm.address)
+      //     data.append('oid', 0)
+      //     data.append('gid', this.good.gid)
+      //     data.append('number', 1)
+      //     data.append('amount', this.good.price)
+      //     data.append('status', 0)
+      //     this.$axios({
+      //       method: "post",
+      //       data: data,
+      //       url: "/orders/insert"
+      //     }).then(res => {
+      //       if (res.data.code === 200) {
+      //         this.$message({
+      //           type: "success",
+      //           message: "下单成功"
+      //         })
+      //         this.$router.push({//下单成功页面进行跳转
+      //           name: "Gooddetail"
+      //         })
+      //       } else {
+      //         this.$message({
+      //           type: "info",
+      //           message: res.data.msg
+      //         })
+      //       }
+      //       // console.log(res.data)
+      //     })
+      //   } else {
+      //     this.$message({
+      //       type: "info",
+      //       message: "格式错误"
+      //     })
+      //   }
+      // })
     },
 
   },created() {
@@ -130,9 +150,7 @@ export default {
       this.good = localStorage.getItem('good')
     else
       localStorage.setItem('good', this.good)
-
-    console.log(this.good)
-
+    // console.log(this.good)
   }
 }
 </script>
