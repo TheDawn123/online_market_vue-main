@@ -7,15 +7,16 @@
       <el-aside width="600px">
           <div class="block">
             <el-image
-                style=" width: 500px; height: 450px"
+                style=" width: 500px; height: 500px"
                 :src="url"
-                fit="fill"></el-image>
+                fit="contain"></el-image>
           </div>
       </el-aside>
-      <el-main>
+      <el-main v-if="rel">
         <el-form class="des">
           <el-form-item label="商品名:">{{this.good['gname']}}</el-form-item>
           <el-form-item label="商品价格:">{{this.good['price']}}</el-form-item>
+          <el-form-item label="商品库存:">{{this.good['stock']}}</el-form-item>
           <el-form-item label="商品描述:">{{this.good['description']}}</el-form-item>
           <el-button v-if="good.status===0" type="primary" @click="Buy">购买</el-button>
           <el-button v-if="good.status===1" type="info">商品已冻结</el-button>
@@ -34,14 +35,25 @@ import Userdetail from "@/components/Userdetail";
 export default {
   name: "Buy",
   components: {Userdetail},
-  comments: {Userdetail},
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   data() {
     return {
+      rel:true,
       url: 'https://i.loli.net/2021/11/02/xhGdp2qk31SEyMt.jpg',
+      img:[],
       good : {}
-
     }
   },methods: {
+    reload(){
+      this.rel = false
+      this.$nextTick(function (){
+        this.rel = true;
+      })
+    },
     Buy(){
       this.$router.push({
         name: 'Buy',
@@ -57,20 +69,32 @@ export default {
       gid = localStorage.getItem('gid')
     else
       localStorage.setItem('gid',gid)
+
     this.$axios({
       method:'get',
-      url: '/good/'+gid
+      url: '/v2.0/good/'+gid
     }).then(res=>{
       this.good["uid"]=res.data.data.uid
       this.good["gid"]=res.data.data.gid
       this.good["gname"]=res.data.data.gname
-      this.good["image"]=res.data.data.image
       this.good["price"]=res.data.data.price
       this.good["stock"]=res.data.data.stock
       this.good["status"]=res.data.data.status
       this.good["description"]=res.data.data.description
-      this.url = res.data.data.image
+      this.$axios({
+        method:'get',
+        url:'/v2.0/img/' + gid
+      }).then(res=>{
+        this.img = res.data
+        if (this.img[1] !== undefined) {
+          this.url = this.img[1]
+        }
+        else this.url = this.img[0]
+        console.log(this.url)
+      })
     })
+
+    this.reload()
   }
 
 }
@@ -80,7 +104,7 @@ export default {
 
 <style scoped>
 .block{
-  margin: 60px 60px;
+  margin: 0px 60px;
 }
 .des{
   margin: 20px 0;

@@ -2,6 +2,7 @@
   <el-container>
     <el-header>
       <div>
+        <!--主页标签栏-->
         <div class="div1">
           <el-tabs v-model="activeName" @tab-click="handleClick" stretch="false">
             <el-tab-pane label="主页" name="first"></el-tab-pane>
@@ -10,6 +11,7 @@
             <el-tab-pane label="" name="fourth"></el-tab-pane>
           </el-tabs>
         </div>
+        <!--搜索框-->
         <div class="div2">
           <el-input
             placeholder="请输入需要搜索的商品名"
@@ -18,7 +20,7 @@
           </el-input>
         </div>
 
-
+        <!--登录按钮-->
         <div class="div3">
           <router-link :to="{name: 'Userhome'}">
             <el-avatar :size="40" :src="circleUrl">
@@ -28,7 +30,7 @@
       </div>
     </el-header>
     <el-container>
-
+      <!--左侧分类目录菜单-->
       <el-aside class="div4">
         <el-menu
             default-active="1"
@@ -66,14 +68,14 @@
         </el-menu>
       </el-aside>
 
-
+      <!--商品列表-->
       <el-main class="div5">
         <template>
           <div align="center">
             <div v-for="(good,i) in goodlist" :key="(good,i)" class="div6" >
               <router-link :to="{name: 'Gooddetail',params: {gid :good.gid} }">
-                <el-card class="block">
-                  <el-image :src="goodlist[i].imgUrl"></el-image>
+                <el-card class="block" >
+                  <el-image fit="fill" class="image" :src="goodlist[i].imgUrl"></el-image>
                   <span><p align="center">{{ goodlist[i].gname }}</p></span>
                 </el-card>
               </router-link>
@@ -94,16 +96,6 @@
 
 
 
-<!--    <div align="center">-->
-<!--      <div v-for="(good,i) in goods" :key="(good,i)" class="div6" >-->
-<!--        <router-link :to="{name: 'Gooddetail',params: {gid :goods.gid} }">-->
-<!--          <el-card class="block">-->
-<!--            <el-image :src="goods[i].imgUrl"></el-image>-->
-<!--            <span><p align="center">{{ goods[i].gname }}</p></span>-->
-<!--          </el-card>-->
-<!--        </router-link>-->
-<!--      </div>-->
-<!--    </div>-->
   </el-container>
 </template>
 <script>
@@ -135,7 +127,7 @@ export default {
       if (this.activeName === 'first') this.$router.push("Home")
       console.log(tab, event);
     },
-    onSearch(){
+    onSearch(){//搜索功能
 
     }
   },
@@ -162,8 +154,12 @@ export default {
       //
       // }
 
+      console.log(res.data.data)
       this.goodlist = res.data.data
-      console.log(this.goodlist)
+      console.log(this.goodlist[0].imgUrl)
+      console.log(this.goodlist[1].imgUrl)
+      // this.goodlist = res.data.data
+      // console.log(this.goodlist)
     }).catch((error) => {
       console.log(error)
     })
@@ -176,6 +172,8 @@ export default {
 
 <style>
 .block {
+  width: 100%;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -235,7 +233,7 @@ export default {
 .div6 {
   margin: 10px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-  width: 220px;
+  width: 200px;
   height: auto;
   display: inline-block;
   /*margin-left: 50px;*/
@@ -251,6 +249,9 @@ export default {
   border-width: 1px;
   margin-left: 150px;
   margin-top: 30px;
+}
+.image{
+  width: 100%;
 }
 
 </style>
