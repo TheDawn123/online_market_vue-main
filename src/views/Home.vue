@@ -15,8 +15,8 @@
         <div class="div2">
           <el-input
             placeholder="请输入需要搜索的商品名"
-            v-model="input4">
-            <el-button slot="append" icon="el-icon-search" onclick="onSearch"></el-button>
+            v-model="keyword">
+            <el-button slot="append" icon="el-icon-search" @click="onSearch"></el-button>
           </el-input>
         </div>
 
@@ -112,7 +112,7 @@ export default {
       goodlist: [],
       url:'',
       activeName: 'first',
-      input4: '',
+      keyword: '',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
     };
   },
@@ -128,7 +128,12 @@ export default {
       console.log(tab, event);
     },
     onSearch(){//搜索功能
-
+      this.$axios({
+        method:'get',
+        url:"/v2.0/good/search"
+      }).then(res=>{
+        console.log(res)
+      })
     }
   },
   created() {

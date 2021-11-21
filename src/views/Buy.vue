@@ -83,24 +83,26 @@ export default {
     }
   }, methods: {
     submitForm() {
-      // let data = new FormData
-      // var total = this.num * this.good['price']
-      // data.append('amount',total)
-      // data.append('date',Date())
-      // data.append('gid',this.good['gid'])
-      // data.append('number',this.num)
-      // data.append('status',1)
-      // data.append('uid',this.good['uid'])
-      // this.$axios({
-      //   method:'put',
-      //   url:'/v2.0/orders',
-      //   data:data
-      // }).then(res=>{
-      //   console.log(res)
-      // })
-
-
-      // console.log(this.num)
+      let data = new FormData
+      var total = this.num * this.good['price']
+      data.append('amount',total)
+      data.append('gid',this.good['gid'])
+      data.append('number',this.num)
+      data.append('status',1)
+      data.append('uid',this.good['uid'])
+      this.$axios({
+        method:'put',
+        url:'/v2.0/orders',
+        data:data
+      }).then(res=>{
+        console.log(res)
+      })
+      this.$message({
+        type:"success",
+        message:"下单成功"
+      })
+      this.$router.push('home')
+       // console.log(total)
 
 
       // this.$refs[forName].validate(valid => {

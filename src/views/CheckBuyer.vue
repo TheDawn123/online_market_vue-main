@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     handleCurrentChange(val) {
-      this.$axios.get("/orders?currentpage=" + val + "&size=" + this.size).then(res => {
+      this.$axios.get("/v2.0/orders?currentpage=" + val + "&size=" + this.size).then(res => {
         this.orderslist = res.data.data.records
         this.currentPage = res.data.data.current
         this.total = res.data.data.total
@@ -126,6 +126,7 @@ export default {
           this.orderslist[i].date = this.orderslist[i].date.replace(/T/g," ")
         }
         console.log(this.orderslist)
+
       })
       this.$axios.get("/good/alive").then(res=>{
         this.live = res.data.data
