@@ -3,44 +3,39 @@
     <el-header>
       <Userdetail></Userdetail>
     </el-header>
-<!--    <el-container>-->
-<!--      <el-aside width="400px">-->
-<!--        <div class="block">-->
-<!--          <el-image-->
-<!--              style="width: 300px; height: 300px"-->
-<!--              :src="this.good['image']"-->
-<!--              fit="fill"></el-image>-->
-<!--        </div>-->
-<!--      </el-aside>-->
-<!--      <el-main>-->
-
-<!--        <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="100px" class="des">-->
-<!--          <el-form-item label="商品名称: ">-->
-<!--            <el-label-wrap>{{ this.good['gname'] }}</el-label-wrap>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="商品价格: ">-->
-<!--            <el-label-wrap>{{ this.good['price'] }}</el-label-wrap>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="收件人姓名: " prop="name">-->
-<!--            <el-input v-model="ruleForm.name" auto-complete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="收件人电话: " prop="phone">-->
-<!--            <el-input v-model="ruleForm.phone" auto-complete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="收件人地址: " prop="address">-->
-<!--            <el-input v-model="ruleForm.address" auto-complete="off"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item>-->
-<!--            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>-->
-<!--            <el-button>取消</el-button>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--      </el-main>-->
-<!--    </el-container>-->
       <h2>确认订单信息</h2>
       <span>默认交易地址:</span>
     <el-container>
       <el-main>
+<!--        <el-table-->
+<!--            :data="tableData"-->
+<!--            style="width: 100%">-->
+<!--          <el-table-column-->
+<!--              prop="gname"-->
+<!--              label="商品名称"-->
+<!--              width="180">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              prop="price"-->
+<!--              label="商品价格"-->
+<!--              width="180">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              prop="stock"-->
+<!--              label="商品库存">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              prop="address"-->
+<!--              label="购买数量">-->
+<!--            <el-input-number v-model="num" :min="1"  :max="this.tableData[0].stock" size="small"></el-input-number>-->
+<!--          </el-table-column>-->
+<!--          <el-table-column-->
+<!--              prop="total"-->
+<!--              label="总价">-->
+<!--          </el-table-column>-->
+<!--        </el-table>-->
+
+
         <div class="label" style="margin-top: 10px">
         <div style="display: inline;width: 150px;text-align: center">商品名称</div>
         <div style="display: inline;width: 150px;text-align: center;margin-left: 150px">单价</div>
@@ -50,13 +45,16 @@
           <el-divider></el-divider>
         </div>
         <div class="label2" style="margin-top: 10px">
-          <div style="display: inline;text-align: center;">{{ this.good['gname'] }}</div>
-          <div style="display: inline;text-align: center;margin-left: 220px">{{ this.good['price'] }}</div>
-          <div style="display: inline;text-align: center;margin-left: 160px">{{ this.good['stock'] }}</div>
-          <div style="display: inline;text-align: center;margin-left: 160px">
+          <div class="detail" style="display: inline;text-align: center;">{{ this.good['gname'] }}</div>
+          <div class="detail" style="display: inline;text-align: center;">{{ this.good['price'] }}</div>
+          <div class="detail" style="display: inline;text-align: center;">{{ this.good['stock'] }}</div>
+          <div class="detail" style="display: inline;text-align: center;">
             <el-input-number v-model="num" :min="1"  :max="this.good['stock']"  label="描述文字" size="small">12</el-input-number>
           </div>
           <div style="display: inline;text-align: center;margin-left: 110px">{{ this.num * this.good['price'] }}</div>
+        </div>
+        <div class="label3" style="margin-top: 10px">
+          <div></div>
         </div>
         <div style="float: right;margin-top: 150px">
           <div style="margin-right: 0px">实付款:</div>
@@ -80,6 +78,12 @@ export default {
       num:1,
       good: {},
       // total:this.num * this.good['price']
+      //   tableData:[{
+      //     gname:'',
+      //     price:"",
+      //     stock:"",
+      //     total:''
+      //   }]
     }
   }, methods: {
     submitForm() {
@@ -88,8 +92,8 @@ export default {
       data.append('amount',total)
       data.append('gid',this.good['gid'])
       data.append('number',this.num)
-      data.append('status',1)
-      data.append('uid',this.good['uid'])
+      data.append('status',0)
+      data.append('uid',this.$store.getters.getUser.uid)
       this.$axios({
         method:'put',
         url:'/v2.0/orders',
@@ -153,6 +157,11 @@ export default {
     else
       localStorage.setItem('good', this.good)
     // console.log(this.good)
+    // console.log(this.$store.getters.getUser.uid)
+    // this.tableData[0].gname=this.good['gname']
+    // this.tableData[0].price=this.good['price']
+    // this.tableData[0].stock=this.good['stock']
+    // console.log(this.tableData[0].stock)
   }
 }
 </script>
@@ -171,5 +180,8 @@ export default {
 }
 span{
   float: left;
+}
+.detail{
+  margin-left: 150px;
 }
 </style>
